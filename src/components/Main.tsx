@@ -27,6 +27,10 @@ const Main = () => {
     };
 
     const sendMessageUtil = async () => {
+        if (!message || message.trim() === "") {
+            window.alert("Message cannot be empty!");
+            return;
+        }
         setLoading(true);
         try {
             const inputtedMessage = message;
@@ -52,8 +56,9 @@ const Main = () => {
                 content: res.content
             })
             setMessages(newMessages);
-        } catch (error) {
-            console.error(error);
+        } catch (error: any) {
+            window.alert('message' in error ? (`Error: ${error.message as string}`) : 'An error occurred whilst chatGPT was answering!');
+            console.error(error)
         } finally {
             setLoading(false);
         }
