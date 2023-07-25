@@ -29,10 +29,12 @@ const Main = () => {
     const sendMessageUtil = async () => {
         setLoading(true);
         try {
+            const inputtedMessage = message;
+            setMessage('')
             const newMessages = [...messages];
             newMessages.push({
                 role: 'user',
-                content: message
+                content: inputtedMessage
             })
             const completion = await openai.createChatCompletion({
                 model: "gpt-3.5-turbo-16k",
@@ -41,13 +43,14 @@ const Main = () => {
                 max_tokens: 100
             });
             const res = completion.data.choices[0].message;
-            if (!res || !res.content)
-                throw new Error('Could not summarise!');
+            if (!res || !res.content) {
+                window.alert("An error occurred with chatGPT!");
+                return;
+            }
             newMessages.push({
                 role: 'assistant',
                 content: res.content
             })
-            setMessage('');
             setMessages(newMessages);
         } catch (error) {
             console.error(error);
